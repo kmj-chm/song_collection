@@ -1,0 +1,5 @@
+services:
+  web:
+    build: ./web
+    ports:
+      - "8080:80"  # 내 컴퓨터에서 localhost:8080으로 접속하겠다는 뜻
