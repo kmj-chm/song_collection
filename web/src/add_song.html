@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>노래 추가</title>
+</head>
+<body style="margin: 0; font-family: sans-serif; background-color: #f4f6f9;">
+
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background-color: #1e272e; color: white;">
+        <h2 style="margin: 0; cursor: pointer;" onclick="location.href='main.html'">🎵 Music Hub</h2>
+        <div><button onclick="location.href='main.html'" style="background: #555; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">목록으로</button></div>
+    </nav>
+
+    <div style="max-width: 400px; margin: 50px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #1e272e; border-bottom: 2px solid #00d2d3; padding-bottom: 8px;">➕ 새 노래 추가</h3>
+        <input type="text" id="songTitle" placeholder="노래 제목" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        <input type="text" id="songArtist" placeholder="가수 이름" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
+        <textarea id="songDesc" placeholder="노래 설명" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; height: 100px; resize: none;"></textarea>
+        <button onclick="addSong()" style="width: 100%; padding: 12px; background-color: #00d2d3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">등록하기</button>
+    </div>
+
+    <script>
+        function addSong() {
+            const title = document.getElementById("songTitle").value.trim();
+            const artist = document.getElementById("songArtist").value.trim();
+            const desc = document.getElementById("songDesc").value.trim();
+
+            if (!title || !artist || !desc) { alert("모든 항목을 입력해 주세요!"); return; }
+
+            // [수정] 로그인한 유저의 아이디를 알아내어 해당 유저만의 리스트에 추가
+            const currentUser = sessionStorage.getItem("currentUser");
+            if (!currentUser) { alert("로그인이 필요합니다."); location.href = 'login.html'; return; }
+            
+            const songStorageKey = currentUser + "_mySongs";
+            const songs = JSON.parse(localStorage.getItem(songStorageKey)) || [];
+            
+            songs.push({ id: Date.now(), title, artist, desc, isFavorite: false });
+            
+            localStorage.setItem(songStorageKey, JSON.stringify(songs));
+            alert("노래가 등록되었습니다!");
+            location.href = 'main.html';
+        }
+    </script>
+</body>
+</html>

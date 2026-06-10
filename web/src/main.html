@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 - 플레이리스트</title>
+</head>
+<body style="margin: 0; font-family: sans-serif; background-color: #f4f6f9;">
+
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background-color: #1e272e; color: white;">
+        <h2 style="margin: 0; cursor: pointer;" onclick="location.href='main.html'">🎵 Music Hub</h2>
+        <div style="display: flex; gap: 20px; align-items: center;">
+            <a href="add_song.html" style="color: #00d2d3; text-decoration: none; font-weight: bold;">➕ 노래 추가</a>
+            <a href="like_song.html" style="color: #ff4d4d; text-decoration: none; font-weight: bold;">❤️ 찜 목록</a>
+            <span id="userGreeting" style="font-weight: bold; margin-left: 10px;"></span>
+            <button onclick="logout()" style="background-color: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">로그아웃</button>
+        </div>
+    </nav>
+
+    <div style="max-width: 600px; margin: 40px auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #1e272e; border-bottom: 2px solid #341f97; padding-bottom: 8px;">📋 나의 플레이리스트</h3>
+        <div id="songListContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
+    </div>
+
+    <script>
+        let songs = [];
+        let songStorageKey = ""; // 유저별 고유 키를 담을 변수
+
+        window.onload = function() {
+            const currentUser = sessionStorage.getItem("currentUser");
+            if (!currentUser) { alert("로그인이 필요합니다."); location.href = 'login.html'; return; }
+            document.getElementById("userGreeting").innerText = currentUser + "님";
+
+            // [수정] 유저 아이디별로 저장 키 분리 (예: 'test_mySongs')
+            songStorageKey = currentUser + "_mySongs";
+            songs = JSON.parse(localStorage.getItem(songStorageKey)) || [];
+            renderSongs();
+        };
+
+        function renderSongs() {
+            const container = document.getElementById("songListContainer");
+            container.innerHTML = "";
+
+            if (songs.length === 0) {
+                container.innerHTML = `<p style="color: #aaa; text-align:center; padding: 20px;">등록된 노래가 없습니다.</p>`;
+                return;
+            }
+
+            songs.forEach(song => {
+                const card = document.createElement("div");
+                card.style = "display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #f8f9fa; border: 1px solid #eee; border-radius: 6px;";
+                card.innerHTML = `
+                    <div style="cursor: pointer; flex: 1;" onclick="location.href='song_detail.html?id=${song.id}'">
+                        <strong style="font-size: 16px; color:#222;">${song.title}</strong>
+                        <div style="font-size: 13px; color:#777; margin-top:2px;">${song.artist}</div>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button onclick="toggleFavorite(${song.id})" style="background: none; border: none; cursor: pointer; font-size: 18px;">
+                            ${song.isFavorite ? '❤️' : '🤍'}
+                        </button>
+                        <button onclick="deleteSong(${song.id})" style="background: none; border: none; cursor: pointer; font-size: 14px; color: #ccc;">🗑️</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleFavorite(id) {
+            songs = songs.map(song => song.id === id ? { ...song, isFavorite: !song.isFavorite } : song);
+            localStorage.setItem(songStorageKey, JSON.stringify(songs)); // 유저 고유 키로 저장
+            renderSongs();
+        }
+
+        function deleteSong(id) {
+            if(confirm("이 노래를 리스트에서 삭제하시겠습니까?")) {
+                songs = songs.filter(song => song.id !== id);
+                localStorage.setItem(songStorageKey, JSON.stringify(songs)); // 유저 고유 키로 저장
+                renderSongs();
+            }
+        }
+
+        function logout() { sessionStorage.removeItem("currentUser"); location.href = 'login.html'; }
+    </script>
+</body>
+</html>

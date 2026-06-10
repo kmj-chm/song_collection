@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 찜 목록</title>
+</head>
+<body style="margin: 0; font-family: sans-serif; background-color: #f4f6f9;">
+
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background-color: #1e272e; color: white;">
+        <h2 style="margin: 0; cursor: pointer;" onclick="location.href='main.html'">🎵 Music Hub</h2>
+        <div><button onclick="location.href='main.html'" style="background: #555; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">목록으로</button></div>
+    </nav>
+
+    <div style="max-width: 500px; margin: 40px auto; background: #fff5f5; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #ee5253; border-bottom: 2px solid #ee5253; padding-bottom: 8px;">❤️ 나의 찜 목록</h3>
+        <div id="favoriteListContainer" style="display: flex; flex-direction: column; gap: 10px;"></div>
+    </div>
+
+    <script>
+        let songs = [];
+        let songStorageKey = "";
+
+        window.onload = function() {
+            // [수정] 로그인한 유저의 고유 찜 목록 확인
+            const currentUser = sessionStorage.getItem("currentUser");
+            if (!currentUser) { alert("로그인이 필요합니다."); location.href = 'login.html'; return; }
+            
+            songStorageKey = currentUser + "_mySongs";
+            songs = JSON.parse(localStorage.getItem(songStorageKey)) || [];
+            renderFavorites();
+        };
+
+        function renderFavorites() {
+            const container = document.getElementById("favoriteListContainer");
+            container.innerHTML = "";
+
+            const favSongs = songs.filter(s => s.isFavorite);
+
+            if (favSongs.length === 0) {
+                container.innerHTML = `<p style="color: #bbb; text-align:center; padding: 20px;">찜한 노래가 없습니다.</p>`;
+                return;
+            }
+
+            favSongs.forEach(song => {
+                const card = document.createElement("div");
+                card.style = "display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: white; border: 1px solid #ffa8a8; border-radius: 6px;";
+                card.innerHTML = `
+                    <div style="cursor: pointer; flex: 1;" onclick="location.href='song_detail.html?id=${song.id}'">
+                        <strong style="color: #c92a2a; font-size: 16px;">${song.title}</strong>
+                        <div style="font-size: 13px; color: #888; margin-top:2px;">${song.artist}</div>
+                    </div>
+                    <button onclick="removeFavorite(${song.id})" style="background: none; border: none; cursor: pointer; font-size: 16px;">💔</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function removeFavorite(id) {
+            songs = songs.map(song => song.id === id ? { ...song, isFavorite: false } : song);
+            localStorage.setItem(songStorageKey, JSON.stringify(songs)); // 유저 고유 키로 업데이트
+            renderFavorites();
+        }
+    </script>
+</body>
+</html>

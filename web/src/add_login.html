@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+</head>
+<body>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f5f5f5;">
+        <div style="border: 1px solid #ddd; width: 260px; padding: 30px; text-align: center; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2 style="margin-bottom: 20px; color: #333;">회원가입</h2>
+            
+            <input type="text" id="regId" oninput="checkIdDuplicate()" placeholder="아이디" style="width: 100%; padding: 10px; margin-bottom: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;"><br>
+            <div id="idMessage" style="font-size: 12px; text-align: left; margin-bottom: 10px; height: 15px; font-weight: bold;"></div>
+            
+            <div style="position: relative; width: 100%; margin-bottom: 15px;">
+                <input type="password" id="regPw" placeholder="비밀번호" style="width: 100%; padding: 10px; padding-right: 40px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+                <button type="button" onclick="togglePasswordVisibility('regPw', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 16px; padding: 0;">👁️</button>
+            </div>
+            
+            <button onclick="register()" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">가입 완료</button>
+        </div>
+    </div>
+
+    <script>
+        let isIdValid = false;
+
+        // [비밀번호 보이기/숨기기 토글 함수]
+        function togglePasswordVisibility(inputId, button) {
+            const pwInput = document.getElementById(inputId);
+            if (pwInput.type === "password") {
+                pwInput.type = "text";
+                button.innerText = "🔒"; 
+            } else {
+                pwInput.type = "password";
+                button.innerText = "👁️"; 
+            }
+        }
+
+        function checkIdDuplicate() {
+            const idInput = document.getElementById('regId').value.trim();
+            const messageElement = document.getElementById('idMessage');
+
+            if (idInput === "") {
+                messageElement.innerText = "";
+                isIdValid = false;
+                return;
+            }
+
+            const existingUser = localStorage.getItem(idInput);
+
+            if (existingUser !== null) {
+                messageElement.innerText = "❌ 이미 존재하는 아이디입니다.";
+                messageElement.style.color = "red";
+                isIdValid = false;
+            } else {
+                messageElement.innerText = "💚 사용 가능한 아이디입니다.";
+                messageElement.style.color = "green";
+                isIdValid = true;
+            }
+        }
+
+        function register() {
+            const idInput = document.getElementById('regId').value.trim();
+            const pwInput = document.getElementById('regPw').value.trim();
+
+            if (idInput === "" || pwInput === "") {
+                alert("아이디와 비밀번호를 모두 입력해주세요.");
+                return;
+            }
+
+            if (!isIdValid) {
+                alert("가입 실패: 아이디를 다시 확인해주세요.");
+                return;
+            }
+
+            localStorage.setItem(idInput, pwInput);
+            
+            alert("회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
+            location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

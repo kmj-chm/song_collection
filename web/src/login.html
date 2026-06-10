@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+</head>
+<body>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f5f5f5;">
+        <div style="border: 1px solid #ddd; width: 260px; padding: 30px; text-align: center; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2 style="margin-bottom: 20px; color: #333;">로그인</h2>
+            
+            <input type="text" id="loginId" placeholder="아이디" style="width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;"><br>
+            
+            <div style="position: relative; width: 100%; margin-bottom: 15px;">
+                <input type="password" id="loginPw" placeholder="비밀번호" style="width: 100%; padding: 10px; padding-right: 40px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+                <button type="button" onclick="togglePasswordVisibility('loginPw', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 16px; padding: 0;">👁️</button>
+            </div>
+            
+            <button onclick="login()" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">로그인</button><br>
+            
+            <div style="margin-top: 15px;">
+                <a href="add_login.html" style="color: #666; text-decoration: none; font-size: 14px;">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // [비밀번호 보이기/숨기기 토글 함수]
+        function togglePasswordVisibility(inputId, button) {
+            const pwInput = document.getElementById(inputId);
+            if (pwInput.type === "password") {
+                pwInput.type = "text";
+                button.innerText = "🔒"; // 보일 때는 잠금 아이콘으로 변경 (혹은 취소선 눈 이모지 대체)
+            } else {
+                pwInput.type = "password";
+                button.innerText = "👁️"; // 숨겨졌을 때는 다시 눈 아이콘으로 변경
+            }
+        }
+
+        function login() {
+            const idInput = document.getElementById('loginId').value.trim();
+            const pwInput = document.getElementById('loginPw').value.trim();
+
+            if (idInput === "" || pwInput === "") {
+                alert("아이디와 비밀번호를 입력해주세요.");
+                return;
+            }
+
+            const savedPassword = localStorage.getItem(idInput);
+
+            if (savedPassword === null) {
+                alert("로그인 실패: 존재하지 않는 아이디입니다.");
+            } else if (savedPassword !== pwInput) {
+                alert("로그인 실패: 비밀번호가 일치하지 않습니다.");
+            } else {
+                sessionStorage.setItem("currentUser", idInput); 
+                alert(idInput + "님, 환영합니다!");
+                location.href = 'main.html';
+            }
+        }
+    </script>
+</body>
+</html>
