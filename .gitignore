@@ -1,1 +1,16 @@
+# OS 관련 부산물
 .DS_Store
+Thumbs.db
+
+# 빌드 결과물 및 의존성
+node_modules/
+dist/
+build/
+
+# 환경 변수 및 보안 파일
+.env
+*.key
+
+# IDE 설정 파일
+.vscode/
+.idea/
