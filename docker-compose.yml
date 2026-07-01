@@ -9,7 +9,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./mysql/data:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql #컨테이너 일회성 -> 삭제되도 데이터 유지 -> 맥북 로컬 파일과 도커 내부 경로 볼륨 맵핑 -> 데이터 영속성 보장
     networks:
       - app-network
 
@@ -33,3 +33,14 @@ networks:
     # 이 네트워크에 속한 컨테이너들은 서비스 이름(mysql, web)을 호스트명으로 서로 접근할 수 있습니다.
     # 예: web 컨테이너에서 mysql 컨테이너로 접속할 때 호스트명을 'mysql'로 사용합니다.
     driver: bridge
+
+  # Use root/example as user/password credentials
+
+services:
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 
+    # (this is just an example, not intended to be a production configuration)
