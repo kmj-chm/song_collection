@@ -17,7 +17,6 @@
         
         <input type="text" id="songTitle" placeholder="노래 제목" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
         <input type="text" id="songArtist" placeholder="가수 이름" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
-        
         <input type="text" id="songYoutubeUrl" placeholder="유튜브 링크 주소 (URL)" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
         
         <textarea id="songDesc" placeholder="노래 설명 (생략 가능)" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; height: 100px; resize: none;"></textarea>
@@ -26,14 +25,6 @@
     </div>
 
     <script>
-        // 유튜브 주소에서 고유 영상 ID를 추출하는 함수
-        function extractYoutubeId(url) {
-            if (!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
         function addSong() {
             const title = document.getElementById("songTitle").value.trim();
             const artist = document.getElementById("songArtist").value.trim();
@@ -45,10 +36,8 @@
                 return; 
             }
 
-            // 유튜브 ID 추출 검증
-            const youtubeId = extractYoutubeId(youtubeUrl);
-            if (!youtubeId) {
-                alert("올바른 유튜브 주소(URL)가 아닙니다.\n주소창의 주소를 다시 확인해 주세요.");
+            if (!youtubeUrl.includes("http://") && !youtubeUrl.includes("https://")) {
+                alert("올바른 유튜브 링크 주소(URL)를 입력해 주세요!");
                 return;
             }
 
@@ -58,18 +47,17 @@
             const songStorageKey = currentUser + "_mySongs";
             const songs = JSON.parse(localStorage.getItem(songStorageKey)) || [];
             
-            // 데이터 저장 시 youtubeId 포함
             songs.push({ 
                 id: Date.now(), 
                 title, 
                 artist, 
                 desc: desc || "등록된 설명이 없습니다.", 
-                youtubeId, 
+                youtubeUrl, 
                 isFavorite: false 
             });
             
             localStorage.setItem(songStorageKey, JSON.stringify(songs));
-            alert("노래가 등록되었습니다!");
+            alert("노래가 성공적으로 등록되었습니다!");
             location.href = 'main.html';
         }
     </script>

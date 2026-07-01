@@ -5,35 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입</title>
 </head>
-<body>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f5f5f5;">
-        <div style="border: 1px solid #ddd; width: 260px; padding: 30px; text-align: center; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-            <h2 style="margin-bottom: 20px; color: #333;">회원가입</h2>
+<body style="margin: 0; font-family: sans-serif; background-color: #f5f5f5;">
+
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; background-color: #1e272e; color: white;">
+        <h2 style="margin: 0; cursor: pointer;" onclick="location.href='login.html'">🎵 Music Hub</h2>
+        <div><button onclick="location.href='login.html'" style="background: #555; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;">로그인으로</button></div>
+    </nav>
+
+    <div style="display: flex; justify-content: center; align-items: center; height: calc(100vh - 62px);">
+        <div style="border: 1px solid #ddd; width: 280px; padding: 30px; text-align: center; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2 style="margin-bottom: 20px; color: #333; margin-top: 0;">회원가입</h2>
             
-            <input type="text" id="regId" oninput="checkIdDuplicate()" placeholder="아이디" style="width: 100%; padding: 10px; margin-bottom: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;"><br>
-            <div id="idMessage" style="font-size: 12px; text-align: left; margin-bottom: 10px; height: 15px; font-weight: bold;"></div>
+            <input type="text" id="regId" oninput="checkIdDuplicate()" placeholder="아이디" style="width: 100%; padding: 10px; margin-bottom: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+            <div id="idMessage" style="font-size: 11px; text-align: left; margin-bottom: 10px; height: 15px; font-weight: bold;"></div>
             
             <div style="position: relative; width: 100%; margin-bottom: 15px;">
                 <input type="password" id="regPw" placeholder="비밀번호" style="width: 100%; padding: 10px; padding-right: 40px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
-                <button type="button" onclick="togglePasswordVisibility('regPw', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 16px; padding: 0;">👁️</button>
+                <button type="button" onclick="togglePasswordVisibility('regPw', this)" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 14px;">👁️</button>
             </div>
             
-            <button onclick="register()" style="width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold;">가입 완료</button>
+            <button onclick="register()" style="width: 100%; padding: 12px; background-color: #00d2d3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-bottom: 8px;">가입하기</button>
+            <button onclick="location.href='login.html'" style="width: 100%; padding: 10px; background-color: #eee; color: #333; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; font-size: 13px;">취소 (돌아가기)</button>
         </div>
     </div>
 
     <script>
         let isIdValid = false;
 
-        // [비밀번호 보이기/숨기기 토글 함수]
         function togglePasswordVisibility(inputId, button) {
             const pwInput = document.getElementById(inputId);
             if (pwInput.type === "password") {
                 pwInput.type = "text";
-                button.innerText = "🔒"; 
+                button.innerText = "🔒";
             } else {
                 pwInput.type = "password";
-                button.innerText = "👁️"; 
+                button.innerText = "👁️";
             }
         }
 
@@ -75,7 +81,6 @@
             }
 
             localStorage.setItem(idInput, pwInput);
-            
             alert("회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.");
             location.href = 'login.html';
         }
