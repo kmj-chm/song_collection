@@ -26,14 +26,6 @@
     </div>
 
     <script>
-        // 유튜브 주소에서 고유 영상 ID를 추출하는 함수
-        function extractYoutubeId(url) {
-            if (!url) return null;
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-
         function addSong() {
             const title = document.getElementById("songTitle").value.trim();
             const artist = document.getElementById("songArtist").value.trim();
@@ -45,10 +37,9 @@
                 return; 
             }
 
-            // 유튜브 ID 추출 검증
-            const youtubeId = extractYoutubeId(youtubeUrl);
-            if (!youtubeId) {
-                alert("올바른 유튜브 주소(URL)가 아닙니다.\n주소창의 주소를 다시 확인해 주세요.");
+            // 유튜브 주소 형식이 맞는지 간단히 체크 (http 포함 여부)
+            if (!youtubeUrl.includes("http://") && !youtubeUrl.includes("https://")) {
+                alert("올바른 유튜브 링크 주소(URL)를 입력해 주세요!");
                 return;
             }
 
@@ -58,19 +49,19 @@
             const songStorageKey = currentUser + "_mySongs";
             const songs = JSON.parse(localStorage.getItem(songStorageKey)) || [];
             
-            // 데이터 저장 시 youtubeId 포함
+            // 데이터 저장 시 youtubeUrl을 그대로 저장함
             songs.push({ 
                 id: Date.now(), 
                 title, 
                 artist, 
                 desc: desc || "등록된 설명이 없습니다.", 
-                youtubeId, 
+                youtubeUrl, // 입력받은 링크 통째로 저장
                 isFavorite: false 
             });
             
             localStorage.setItem(songStorageKey, JSON.stringify(songs));
-            alert("노래가 등록되었습니다!");
-            location.href = 'main.html';
+            alert("노래가 성공적으로 등록되었습니다!");
+            location.href = 'main.html'; // 곧바로 목록으로 이동
         }
     </script>
 </body>
