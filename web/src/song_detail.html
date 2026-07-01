@@ -17,7 +17,7 @@
         <h4 id="detailArtist" style="margin-top: 0; color: #888; font-weight: normal; margin-bottom: 25px;">가수 이름</h4>
         
         <div id="listenContainer" style="margin-bottom: 25px; display: none;">
-            <button id="listenBtn" onclick="" style="width: 100%; padding: 15px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(255,0,0,0.2); transition: background 0.2s;">
+            <button id="listenBtn" style="width: 100%; padding: 15px; background-color: #ff0000; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 6px rgba(255,0,0,0.2);">
                 📺 유튜브로 노래 들으러 가기
             </button>
         </div>
@@ -50,17 +50,16 @@
                 document.getElementById("detailDesc").innerText = matchedSong.desc;
                 document.title = matchedSong.title + " - 상세 정보";
 
-                // 저장된 유튜브 주소(URL)가 있다면 버튼을 활성화하고 클릭 이벤트를 연결합니다.
+                // 저장된 링크 정보가 있을 경우 들으러 가기 버튼 세팅 및 노출
                 if (matchedSong.youtubeUrl) {
                     const listenContainer = document.getElementById("listenContainer");
                     const listenBtn = document.getElementById("listenBtn");
                     
-                    // 버튼을 클릭하면 새 탭(_blank)에서 해당 유튜브 주소가 열리도록 세팅
                     listenBtn.onclick = function() {
                         window.open(matchedSong.youtubeUrl, '_blank');
                     };
                     
-                    listenContainer.style.display = "block"; // 숨겨져 있던 버튼 영역 노출
+                    listenContainer.style.display = "block";
                 }
             } else {
                 alert("존재하지 않거나 삭제된 노래 정보입니다.");
