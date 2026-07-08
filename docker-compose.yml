@@ -6,7 +6,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./mysql/data:/var/lib/mysql #컨테이너 일회성 -> 삭제되도 데이터 유지 -> 맥북 로컬 파일과 도커 내부 경로 볼륨 맵핑 -> 데이터 영속성 보장
+      - ./mysql/data:/var/lib/mysql
     networks:
       - app-network
 
@@ -16,7 +16,6 @@ services:
       dockerfile: web/Dockerfile
     ports:
       - "70:80"
-    # 👇 이 부분을 정확히 추가해 주셔야 내 컴퓨터의 html 파일들이 도커로 실시간 복사됩니다!
     volumes:
       - ./web/src:/usr/share/nginx/html
     depends_on:
@@ -27,14 +26,3 @@ services:
 networks:
   app-network:
     driver: bridge
-
-  # Use root/example as user/password credentials
-
-services:
-
-  db:
-    image: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: 
-    # (this is just an example, not intended to be a production configuration)
